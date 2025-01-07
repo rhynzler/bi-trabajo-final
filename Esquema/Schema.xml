@@ -1,0 +1,76 @@
+<Schema name="FinalSchema">
+  <Dimension type="TimeDimension" visible="true" name="Fecha">
+    <Hierarchy name="HFecha" visible="true" hasAll="true" allLevelName="(Todos las fechas)" primaryKey="id_fecha">
+      <Table name="fecha" schema="public" alias="Fecha">
+      </Table>
+      <Level name="A&#241;o" visible="true" column="num_anio" type="Integer" internalType="int" uniqueMembers="true" levelType="TimeYears">
+      </Level>
+      <Level name="Mes" visible="true" column="num_mes" type="Integer" uniqueMembers="true" levelType="TimeMonths">
+      </Level>
+      <Level name="Semana" visible="true" column="num_semana" type="Integer" uniqueMembers="true" levelType="TimeMonths">
+      </Level>
+      <Level name="D&#237;a" visible="true" column="num_dia" type="Integer" uniqueMembers="true" levelType="TimeDays">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Agente">
+    <Hierarchy name="HAgente" visible="true" hasAll="true" allLevelName="(Todos los agentes)" primaryKey="id_agente">
+      <Table name="agente" schema="public" alias="Agente">
+      </Table>
+      <Level name="Tipo Agente" visible="true" column="nombre_tipo" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+      <Level name="Nombre Agente" visible="true" column="nombre_agente" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Producto">
+    <Hierarchy name="HProducto" visible="true" hasAll="true" allLevelName="(Todos los productos)">
+      <Table name="producto" schema="public" alias="Producto">
+      </Table>
+      <Level name="Nombre Division" visible="true" column="nombre_division" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+      <Level name="Nombre Producto" visible="true" column="nombre_producto" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" name="Satisfaccion">
+    <Hierarchy name="HSatisfaccion" visible="true" hasAll="true" allLevelName="(Todas las Respuestas)">
+      <Table name="satisfaccion" schema="public" alias="Satisfaccion">
+      </Table>
+      <Level name="Pregunta" visible="true" column="descripcion" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+      <Level name="Opcion Elegida" visible="true" column="opcion_elegida" type="String" uniqueMembers="true" levelType="Regular">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="Cubo Ventas" visible="true" cache="true" enabled="true">
+    <Table name="ventas" schema="public" alias="Ventas">
+    </Table>
+    <DimensionUsage source="Fecha" name="Fecha" visible="true" foreignKey="id_fecha">
+    </DimensionUsage>
+    <DimensionUsage source="Agente" name="Agente" visible="true" foreignKey="id_agente">
+    </DimensionUsage>
+    <DimensionUsage source="Producto" name="Producto" visible="true" foreignKey="id_producto">
+    </DimensionUsage>
+    <Measure name="Unidades Vendidas" column="unidades_vendidas" datatype="Integer" aggregator="sum" caption="Total de unidades vendidas" visible="true">
+    </Measure>
+    <Measure name="Monto Vendido" column="monto_vendido" datatype="Numeric" aggregator="sum" caption="Total de monto vendido" visible="true">
+    </Measure>
+    <Measure name="Precio Unitario" column="precio_unitario" datatype="Numeric" aggregator="avg" caption="Precio unitario promedio" visible="true">
+    </Measure>
+  </Cube>
+  <Cube name="Cubo Efectividad" visible="true" cache="true" enabled="true">
+    <Table name="retroalimentacion" schema="public" alias="Retroalimentacion">
+    </Table>
+    <DimensionUsage source="Agente" name="Agente" visible="true" foreignKey="id_agente">
+    </DimensionUsage>
+    <DimensionUsage source="Satisfaccion" name="Satisfaccion" visible="true" foreignKey="id_satisfaccion">
+    </DimensionUsage>
+    <Measure name="Clientes Atendidos" column="clientes_atendidos" datatype="Integer" aggregator="sum" caption="Total de clientes atendidos" visible="true">
+    </Measure>
+    <Measure name="Minutos Esperados" column="minutos_esperados" datatype="Integer" aggregator="avg" caption="Total de minutos esperados" visible="true">
+    </Measure>
+    <Measure name="Calificaciones" column="id_satisfaccion" aggregator="distinct-count" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
