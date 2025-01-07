@@ -111,16 +111,7 @@ num_records = {
     Retroalimentacion.__tablename__: 350,
 }
 
-type Model = type[
-    Fecha
-    | Agente
-    | Producto
-    | Satisfaccion
-    | Efectividad
-    | Ventas
-    | Calidad
-    | Retroalimentacion
-]
+type Model = type[Fecha | Agente | Producto | Satisfaccion | Efectividad | Ventas | Calidad | Retroalimentacion]
 
 
 def populate_table(
@@ -128,10 +119,7 @@ def populate_table(
     table: Model,
     *info_tables,
 ):
-    items = [
-        table(**fake_data(table, *info_tables))
-        for _ in range(num_records[table.__tablename__])
-    ]
+    items = [table(**fake_data(table, *info_tables)) for _ in range(num_records[table.__tablename__])]
     session.add_all(items)
     session.flush()
     return items
@@ -161,9 +149,7 @@ def fake_data(
     if table == Producto:
         return {
             "id_division": fake.random_number(digits=2),
-            "nombre_division": choice(
-                ["Tecnología", "Muebles", "Electrodomésticos", "Hogar"]
-            ),
+            "nombre_division": choice(["Tecnología", "Muebles", "Electrodomésticos", "Hogar"]),
             "nombre_producto": choice(
                 [
                     "Laptop",
@@ -336,7 +322,7 @@ def init_db():
 
 def create_sources():
     create_source_1(50)
-    create_source_2(35)
+    # create_source_2(35)
 
 
 if __name__ == "__main__":
